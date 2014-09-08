@@ -1,0 +1,109 @@
+\documentclass[a4paper,twoside]{article}
+
+\usepackage{apalike}
+\usepackage{SCITEPRESS}
+
+\usepackage{multicol}
+\usepackage[small]{caption}
+
+
+
+\begin{document}
+
+
+\title{An ``Hard'' Real-Time Embedded Operating System
+ \subtitle{Development and Use Case for Implementing New MAC Protocols}}
+
+\author{
+\authorname{K\'evin Roussel, Ye-Qiong Song and Olivier Zendra}
+\affiliation{LORIA/INRIA Nancy Grand-Est, Universit\'e de Lorraine,\\
+             615, rue du Jardin Botanique, 54600 Villers-L\`es-Nancy, France}
+\email{\{Kevin.Roussel,Ye-Qiong.Song,Olivier.Zendra\}@inria.fr}
+}
+
+
+\keywords{Hard Real-Time, Internet of Things, MAC protocols,
+          Embedded Operating Systems, RIOT OS}
+
+
+\abstract{Implementing new, high-performance MAC protocols requires hard
+real-time features, to be able to synchronize correctly between different
+unrelated devices. Such features are highly desirable for operating
+wireless networks that are designed to be part of the Internet of Things.
+Unfortunately, the reference operating systems used in this domain cannot
+provide such features.\\
+We describe in this paper the development of a port of RIOT OS \cite{RIOT}
+on the MSP430 microcontroller architecture widely used in IoT-enabled motes.
+RIOT OS offers advanced hard real-time features, especially the simultaneous
+use of as many hardware timers as the underlying platform (MCU) can offer.
+We then demonstrate the power of these features by providing the
+implementation of a new and efficient MAC protocol that uses
+very low processing power and energy.}
+
+
+\onecolumn \maketitle \normalsize \vfill
+
+
+\section{\uppercase{Introduction}}
+
+To implement new, high-performance MAC protocols, one needs to be able to react
+to events with good reactivity (lowest latency possible) and flexibility.
+
+This implies to have efficient systems to manage interruptions, and the extensive
+use of hardware timers.
+
+\section{\uppercase{Current situation}}
+
+Problem: current OSes, and especially the reference, Contiki \cite{Contiki},
+is unable to provide the needed features: Contiki is no real-time OS,
+the processing of ``events'' (using Contiki's terminology) uses a slow
+cooperative scheduler, with too much latency (8 ms!).
+The only real-time feature, \texttt{rtimer}, is much too limited: only one
+instance, and Contiki's kernel functions must not be called from this
+mechanism.
+The other solution, ``bare-metal'' programming, is also very unsatisfactory:
+no portability, no multitasking, and the need to redevelop every needed tool
+and feature,  making application programming harder and tedious.
+
+\section{\uppercase{RIOT OS: the new solution}}
+
+All the benefits of an OS, plus...
+Provides all the features that other OSes miss:
+pre-emptive multitasking, priority aware task scheduler;
+efficient tickless kernel, with low-latency interrupt management;
+highly efficient use of hardware timers: all of them are used concurrently,
+offering the ability to schedule actions with high granularity (on MSP430,
+no less than 32 microseconds of precision!).
+Bonus: uses standard C, no limitations (e.g. like proto-threads forbidding
+the use of \texttt{select});
+Very modular design, uses little memory space.
+
+\section{\uppercase{Our contribution}}
+
+MSP430 is a microcontroller (MCU) architecture, offering very low-power
+consumption, cheap price, and good performance thanks to a custom 16-bit
+RISC design. This architecture is very common in IoT motes.
+It is also very well supported, especially by the Cooja simulator
+provided by the Contiki project \cite{Contiki}.
+
+Make the MSP430 port really robust and usable, by:
+porting to an industrial device (Zolertia Z1), and
+correcting the hardware-dependent part of the scheduler on MSP430.
+
+\section{\uppercase{Use Case: implementing the S-CoSenS MAC protocol}}
+
+Excellent synchronization, thanks to HW timers use.
+Good scalability? To be tested!
+Very sparse use of both transceiver AND processing power, should spare much energy.
+
+\section{\uppercase{Conclusion}}
+
+A discuter.
+
+\vfill
+\bibliographystyle{apalike}
+{\small
+\bibliography{sensornets2015}}
+
+
+\end{document}
