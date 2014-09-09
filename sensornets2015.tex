@@ -1,5 +1,6 @@
 \documentclass[a4paper,twoside]{article}
 
+
 \usepackage{apalike}
 \usepackage{SCITEPRESS}
 
@@ -7,37 +8,47 @@
 \usepackage[small]{caption}
 
 
-
 \begin{document}
 
 
-\title{An ``Hard'' Real-Time Embedded Operating System
- \subtitle{Development and Use Case for Implementing New MAC Protocols}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%                               80 COLONNES                                %%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\author{
-\authorname{K\'evin Roussel, Ye-Qiong Song and Olivier Zendra}
-\affiliation{LORIA/INRIA Nancy Grand-Est, Universit\'e de Lorraine,\\
-             615, rue du Jardin Botanique, 54600 Villers-L\`es-Nancy, France}
-\email{\{Kevin.Roussel,Ye-Qiong.Song,Olivier.Zendra\}@inria.fr}
-}
+
+\title{RIOT OS Paves the Way for Implementation of High-Performance
+       MAC Protocols}
+
+
+%\author{
+%\authorname{K\'evin Roussel, Ye-Qiong Song and Olivier Zendra}
+%\affiliation{LORIA/INRIA Nancy Grand-Est,\\
+%             Universit\'e de Lorraine,\\
+%             615, rue du Jardin Botanique,\\
+%             54600 Villers-L\`es-Nancy, France}
+%\email{\{Kevin.Roussel,Ye-Qiong.Song,Olivier.Zendra\}@inria.fr}
+%}
 
 
 \keywords{Hard Real-Time, Internet of Things, MAC protocols,
           Embedded Operating Systems, RIOT OS}
 
 
-\abstract{Implementing new, high-performance MAC protocols requires hard
+\abstract{Implementing new, high-performance MAC protocols requires
 real-time features, to be able to synchronize correctly between different
 unrelated devices. Such features are highly desirable for operating
-wireless networks that are designed to be part of the Internet of Things.
-Unfortunately, the reference operating systems used in this domain cannot
-provide such features.\\
-We describe in this paper the development of a port of RIOT OS \cite{RIOT}
+wireless networks that are designed to be part of the Internet of Things
+(IoT). Unfortunately, the existing operating systems used in this domain
+cannot provide such features. On the other hand, ``bare-metal'' development
+sacrifices portability, as well as the multitasking abilities needed
+to develop the rich applications that are useful in the domain of
+the Internet of Things.\\
+We describe in this paper the development of a port of RIOT OS
 on the MSP430 microcontroller architecture widely used in IoT-enabled motes.
-RIOT OS offers advanced hard real-time features, especially the simultaneous
-use of as many hardware timers as the underlying platform (MCU) can offer.
-We then demonstrate the power of these features by providing the
-implementation of a new and efficient MAC protocol that uses
+RIOT OS offers rich and advanced  real-time features, especially the
+simultaneous use of as many hardware timers as the underlying platform (MCU)
+can offer. We then demonstrate the power of these features by providing
+a new implementation of S-CoSenS, an efficient MAC protocol that uses
 very low processing power and energy.}
 
 
@@ -52,12 +63,12 @@ to events with good reactivity (lowest latency possible) and flexibility.
 This implies to have efficient systems to manage interruptions, and the extensive
 use of hardware timers.
 
-\section{\uppercase{Current situation}}
+\section{\uppercase{Problem statement}}
 
 Problem: current OSes, and especially the reference, Contiki \cite{Contiki},
 is unable to provide the needed features: Contiki is no real-time OS,
 the processing of ``events'' (using Contiki's terminology) uses a slow
-cooperative scheduler, with too much latency (8 ms!).
+cooperative scheduler, with too much latency (8 ms $= 8000 \mu$s).
 The only real-time feature, \texttt{rtimer}, is much too limited: only one
 instance, and Contiki's kernel functions must not be called from this
 mechanism.
@@ -67,13 +78,14 @@ and feature,  making application programming harder and tedious.
 
 \section{\uppercase{RIOT OS: the new solution}}
 
+\cite{RIOT}
 All the benefits of an OS, plus...
 Provides all the features that other OSes miss:
 pre-emptive multitasking, priority aware task scheduler;
 efficient tickless kernel, with low-latency interrupt management;
 highly efficient use of hardware timers: all of them are used concurrently,
 offering the ability to schedule actions with high granularity (on MSP430,
-no less than 32 microseconds of precision!).
+32 microseconds of precision!).
 Bonus: uses standard C, no limitations (e.g. like proto-threads forbidding
 the use of \texttt{select});
 Very modular design, uses little memory space.
@@ -93,8 +105,9 @@ correcting the hardware-dependent part of the scheduler on MSP430.
 \section{\uppercase{Use Case: implementing the S-CoSenS MAC protocol}}
 
 Excellent synchronization, thanks to HW timers use.
-Good scalability? To be tested!
-Very sparse use of both transceiver AND processing power, should spare much energy.
+
+Very sparse use of both transceiver AND processing power,
+should spare much energy.
 
 \section{\uppercase{Conclusion}}
 
