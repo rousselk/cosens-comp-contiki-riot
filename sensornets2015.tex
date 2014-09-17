@@ -3,6 +3,10 @@
 
 \usepackage{apalike}
 \usepackage{SCITEPRESS}
+\usepackage{amssymb}
+\usepackage{amstext}
+\usepackage{amsmath}
+\usepackage{amsthm}
 
 \usepackage{multicol}
 \usepackage[small]{caption}
@@ -57,17 +61,18 @@ very low processing power and energy.}
 
 \onecolumn \maketitle \normalsize \vfill
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{\uppercase{Introduction}}
 
-When programming the little devices that constitutes the nodes of
+When programming the small devices that constitutes the nodes of
 the Internet of Things (IoT), one has to adapt to the limitations of
 these devices.
 
-Apart from their very limited processing power (espacially compared to what
-the current personal computer, and even mobile devices like smartphones and
-tablets), the main specificity of the devices is that they are operated on
-small batteries (e.g.: AAA or button cells).
+Apart from their very limited processing power (especially compared to
+the current personal computers, and even mobile devices like smartphones
+and tablets), the main specificity of the devices is that they are operated
+on small batteries (e.g.: AAA or button cells).
 
 Thus, one of the main challenges with these motes is the need to reduce
 as much as possible their energy consumption. We want their batteries to last
@@ -84,66 +89,73 @@ only contains some ``physical-world'' sensors and a radio transceiver for
 networking. The main radio communication protocol currently used in the IoT
 field is IEEE 802.15.4. Some MCUs do integrate a 802.15.4 transceiver on-chip.
 
-Among the various components that constitutes a mote, the most power-hungry
+Among the various components that constitute a mote, the most power-consuming
 block is the radio transceiver. Consequently, to reduce the power consumption
 of IoT motes, a first key point is to use the radio transceiver only when
-needed, keeping it off-line as much as possible. The software element
+needed, keeping it powered-off as much as possible. The software element
 responsible to control the radio transceiver in an adequate manner is
-the \emph{MAC (Media Access Control)} and \emph{RDC (Radio Duty Cycle)}
+the \emph{MAC~/ RDC (Media Access Control \& Radio Duty Cycle)}
 layer of the network stack.
 
-A efficient power-saving strategy for IoT motes relies thus on finding the
+A efficient power-saving strategy for IoT motes thus relies on finding the
 better trade-off between minimizing the radio duty cycle while keeping
 networking efficiency at the highest possible level. This is achieved
-by developing new, ``intelligent'' MAC/RDC protocols.
+by developing new, ``intelligent'' MAC~/ RDC protocols.
 
-To implement new, high-performance MAC/RDC protocols, one needs to be able
-to react to events with good reactivity (lowest latency possible) and
+To implement new, high-performance MAC~/ RDC protocols, one needs to be
+able to react to events with good reactivity (lowest latency possible) and
 flexibility. These protocols rely on precise timing to ensure efficient
 synchronization between the different motes and other radio-networked
-devices, thus allowing to turn on radio transceiver \emph{only} when
-needed.
+devices of a \emph{Personal Area Network (PAN)}, thus allowing
+to turn on the radio transceivers \emph{only} when needed.
 
-At the system level, being able to follow sich precise timings means having
+At the system level, being able to follow such accurate timings means having
 very efficient interruption management, and the extensive use of hardware
 timers, that are the most precise timing source available.
 
-The second most power hungry element in a mote, after the radio transceiver,
-is the MCU itself: every current MCU offers ``low-power modes'', that consist
-in disabling the various hardware blocks, beginning with the CPU core.
-The main way to minimize energy consumption with a MCU is thus to disable
-its features as much as possible, only using them when needed:
+The second most power-consuming element in a mote, after the radio
+transceiver, is the MCU itself: every current MCU offers ``low-power modes'',
+that consist in disabling the various hardware blocks, beginning with the CPU
+core. The main way to minimize energy consumption with a MCU is thus
+to disable its features as much as possible, only using them when needed:
 that effectively means putting the whole MCU to sleep as much as possible.
 
 Like for the radio transceiver, using the MCU efficiently while keeping
 the system efficient and reactive means optimal use of interruptions,
 and hardware timers for synchronization.
 
-Thus, in both cases, we need to use optimally interruptions, and hardware
+Thus, in both cases, we need to optimally use interruptions, and hardware
 timers. Being able to use them both efficiently without too much hassle
-implies the use of a specialized operating system (OS), especially to
-benefit easily from multitaking abilities. That's what we will discuss
-in this paper.
+implies the use of a specialized operating system (OS), especially
+to easily benefit from multitasking abilities. That's what we will
+discuss in this paper.
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{\uppercase{Problem statement}}
 
-Specialized OSes for the limited devices that constitute sensor networks have
-been designed, published, and made available for quite a long time.
+Specialized OSes for the resource-constrained devices that constitute
+wireless sensor networks have been designed, published, and made available
+for quite sa long time.
 
 
 The first widely used system in this domain was \emph{TinyOS} \cite{TinyOS}.
 It is an open-source OS, whose first stable release (1.0) was published in
 september 2002. It is very lightweight, and as such well adapted to limited
-devices like WSN motes. Its drawbacks are that one needs to learn a specific
-language---named nesC---to be able to efficiently work within it. This
-language is quite different from standard C and other common imperative
-programming languages, and as such can be difficult to master.
+devices like WSN motes.  It has brought many advances in this domain, like
+the ability to use Internet Protocol (IP) and routing (RPL) on 802.15.4
+networks, including the latest IPv6 version, and to simulate networks
+of TinyOS motes via TOSSIM \cite{TOSSIM}.
+
+Its main drawback is that one needs to learn a specific language---named
+nesC---to be able to efficiently work within it. This language is quite
+different from standard C and other common imperative programming languages,
+and as such can be difficult to master.
 
 The presence of that specific language is no coincidence: TinyOS is built
 on its own specific paradigms: it has an unique stack, from which the
 different components of the OS are called as statically linked callbacks.
-This makes the programmation of applications complex, especially for
+This makes the programming of applications complex, especially for
 decomposing into various ``tasks''. The multitasking part is also
 quite limited: tasks are run in a fixed, queue-like order. Finally,
 TinyOS needs a custom GNU-based toolchain to be built.
@@ -155,20 +167,19 @@ and it is not the mainly used OS of the domain anymore.
 
 The current reference OS in the domain of WSN and IoT is \emph{Contiki}
 \cite{ContikiOS}. It's also an open-source OS, which was first released
-in 2002. It has brought many advances in this domain: we can cite,
-among others, the ability to Internet Protocol (IP) on 802.15.4 networks,
-including the latest IPv6 version, the low-power Rime network stack,
-or the Cooja network simulator \cite{Cooja}.
+in 2002. It is also at the origin of many assets: we can cite, among others,
+the uIP Embedded TCP/IP Stack \cite{uip}, that has been extended to uIPv6,
+the low-power Rime network stack \cite{Rime}, or the Cooja advanced network
+simulator \cite{Cooja}.
 
-While a bit more requiring than TinyOS, Contiki is also very lightweight
-and well adapted to motes. Its greatest advantage over TinyOS is that
-it is based on standard, well-known OS paradigms, and coded in standard
-C language, which makes it quite easy to learn and program (especially
-compared to TinyOS). It offers an event-based kernel, implemented
-using cooperative multithreading, and (as we saif before) a complete
-network stack. All of these features and advantages have made
-Contiki widespread: as we said before, it is currently the reference
-OS when it comes to WSN.
+While a bit more resource-requiring than TinyOS, Contiki is also very
+lightweight and well adapted to motes. Its greatest advantage over TinyOS
+is that it is based on standard, well-known OS paradigms, and coded
+in standard C language, which makes it relatively easy to learn and program.
+It offers an event-based kernel, implemented using cooperative multithreading,
+and (as we said before) a complete network stack. All of these features and
+advantages have made Contiki widespread: as we said before, it is currently
+the reference OS when it comes to WSN.
 
 Contiki developers also have made advances in the MAC/RDC domain: many
 of them have been implemented as part of the Contiki network stack, and
@@ -186,19 +197,38 @@ Contiki OS is indeed not a real-time OS: the processing of ``events''---using
 Contiki's terminology---is made by using the kernel's scheduler, which is
 based on cooperative multitasking. This scheduler only triggers at a specific,
 pre-determined rate; on the platforms we're interested in, this rate is
-fixed to 128 Hz: this corresponds to a latency of up to 8 milliseconds
-(8000 microseconds) to process an event, interruption management being
+fixed to 128~Hz: this corresponds to a time skew of up to 8~milliseconds
+(8000~microseconds) to process an event, interruption management being
 one of the possible events. Such a lack of precise timing is clearly
-a huge problem when implementing high-performance MAC/RDC protocols.
+a huge problem when implementing high-performance MAC/RDC protocols,
+knowing that the transmission of a full-length 802.15.4 packet takes
+bout 4~milliseconds (4000~microseconds), and for slotted CSMA/CA,
+transmission of a beacon packet only takes 320~microseconds.
 
-Contiki provides a real-time feature, \texttt{rtimer}, which allows to bypass
-the kernel scheduler and use an hardware timer to trigger execution of
-user-defined functions. However, it has very severe limitations: only
-one instance of \texttt{rtimer} is available, thus only one real-time
-event can be scheduled or executed at any time; moreover, it is impossible
-to execute from \texttt{rtimer}, even indirectly, most of the Contiki
-basic functions (i.e.: kernel, network stack, etc.), which are not
-designed to handle pre-emption.
+To address this problem, Contiki provides a real-time feature,
+\texttt{rtimer}, which allows to bypass the kernel scheduler and use
+an hardware timer to trigger execution of user-defined functions. However,
+it has very severe limitations:
+
+\begin{itemize}
+
+\item only one instance of \texttt{rtimer} is available, thus only one
+real-time event can be scheduled or executed at any time; this limitation
+forbids, or at least makes development of advanced real-time software---like
+high-performance MAC~/ RDC protocols---very hard;
+
+\item moreover, it is unsafe to execute from \texttt{rtimer}, even
+indirectly, most of the Contiki basic functions (i.e.: kernel, network stack,
+etc.), which are not designed to handle pre-emption. Contiki is indeed
+based on cooperative multithreading, whereas the \texttt{rtimer} mechanism
+is a late, ``unintegrated'' addition. Only functions that run with all
+interrupt disabled (like \texttt{process\_poll()}) can be safely invoked
+from \texttt{rtimer}, using other parts of Contiki's meaning almost
+certainly crash or unpredictable behaviour. This restriction practically
+makes impossible to write Contiki extensions (like network stack layer
+drivers) using \texttt{rtimer}.
+
+\end{itemize}
 
 Also note that this cooperative scheduler is designed to manage a specific
 kind of tasks: the \emph{protothreads}. This solution allows to manage
@@ -206,36 +236,48 @@ different threads of execution, without needing each of them to have
 its own separate stack \cite{Protothreads}. The great advantage of
 this mechanism is the ability to use an unique stack, thus greatly
 reducing the needed amount of RAM for the system. The trade-off is
-that one must be careful when using certain C constructs (i.e.: it is
-impossible to use the \texttt{select} statement in some parts of your
-programs).
+that one must be careful when using certain C constructs (i.e.:
+it is impossible to use the \texttt{switch} statement in
+some parts of programs that use protothreads).
 
 For all these reasons, we were unable to use Contiki OS to develop and
 implement our high-performance MAC/RDC protocols. We definitely need
 an OS with efficient real-time features and event handling mechanism.
 
 
-This is also why ``bare-metal'' programming is also unacceptable for us:
+This is why ``bare-metal'' programming is also unacceptable for us:
 it would mean sacrificing portability and multitasking; and we would also
-need to redevelop many tools and APIs to making application programming
+need to redevelop many tools and APIs for making application programming
 even remotely practical enough for third-party developers who would
 want to use our protocols.
 
+We also envisioned to use an established real-time OS (RTOS) as a base
+for our works. The current reference when it comes to open-source RTOS is
+\emph{FreeRTOS} (\texttt{http://www.freertos.org/}). It is a robust, mature
+and widely used OS. Its codebase consists in clean and well-documented
+standard C language. However, it offers only core features, and doesn't
+provide any network subsystem at all. Redeveloping a whole network stack
+from scratch was of course much too work for us to tackle.
+(Network extensions exist for FreeRTOS, but they are either immature,
+either very limited, either proprietary and commercial software; and
+most of them are tied to a peculiar piece of hardware, thus ruining
+the portability advantage offered by the OS.)
 
-\section{\uppercase{RIOT OS: the new solution}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-Consequently, we searched for a new solution, and we eventually discovered
-\emph{RIOT OS} \cite{RIOT}.
+\section{\uppercase{The RIOT Operating System}}
 
-This new system is also open-source and specialized in the domain of
-low-power, embedded wireless sensors. It is very recent---its first release
-has been published in 2013---and offers many interesting features, that
+Consequently, we focused our interest on \emph{RIOT OS} \cite{RIOT}.
+
+This new system---its first release has been published in 2013---is also
+open-source and specialized in the domain of low-power, embedded wireless
+sensors. It is very recentand offers many interesting features, that
 we will now describe.
 
-It provides the basic benefits of an OS: it offers, like TinyOS and Contiki,
-portability (it has been ported to many devices powered by ARM, MSP430,
-and---more recently---AVR microcontrollers), a micro-kernel and
-a comprehensive network stack.
+It provides the basic benefits of an OS: portability (it has been ported
+to many devices powered by ARM, MSP430, and---more recently---AVR
+microcontrollers) and a comprehensive set of features, including
+a network stack.
 
 Moreover, it offers key features that are otherwise yet unknown in
 the WSN/IoT domain:
@@ -247,19 +289,18 @@ the WSN/IoT domain:
 \item that kernel includes a priority-aware task scheduler, providing
       \emph{pre-emptive multitasking};
 
-\item an highly efficient use of \emph{hardware timers}: all of them can be
+\item a highly efficient use of \emph{hardware timers}: all of them can be
       used concurrently (especially since the kernel is tickless), offering
       the ability to schedule actions with high granularity; on low-end
       devices, based on MSP430 architecture, events can be scheduled
-      with a precision of 32 microseconds;
+      with a precision of 32~microseconds;
 
 \item RIOT is entirely written in \emph{standard C language}; but unlike
       Contiki, there are no restrictions on usable constructs (i.e.: like
       those introduced by the protothreads mechanism);
 
-\item a very \emph{modular design}, reducing the requirements in terms
-      of memory footprint: the RIOT OS kernel is notably less demanding than
-      Contiki's, approaching TinyOS's level of frugality.
+\item a clean and \emph{modular design}, that makes development with and
+      \emph{into} the system itself easier and more productive.
 
 \end{itemize}
 
@@ -270,9 +311,22 @@ We also believe that the tickless kernel and the optimal use of hardware
 timers should make RIOT OS the ideal software platform to optimize energy
 consumption on battery-powered, MCU-based devices.
 
-Having found a software platform offering us all the features we needed,
-we began to work with it, and during the process made several contributions.
+A drawback of RIOT, compared to TinyOS or Contiki, is its higher demand
+concerning memory footprint: the full network stack (from PHY driver up
+to RPL routing with IPv6/6LoWPAN and MAC~/ RDC layers) cannot be compiled
+for Sky/TelosB because of overflowing memory space. Right now, constrained
+devices like MSP430-based motes are limited to the role of what the 802.15.4
+standard calls \emph{Reduced Function Devices (RFD)}, the role of \emph{Full
+Function Devices (FFD)} being reserved to more powerful motes (i.e.: based
+on ARM microcontrollers).
 
+However, we also note that, thanks to its modular architecture, the RIOT
+kernel, compiled with only PHY and MAC~/ RDC layers, is actually lightweight
+and consumes few memory. We consequently believe that the current situation
+is due to the immaturity of higher layers of RIOT network stack, and that
+in the future MSP430-based devices could be used as FFD with RIOT OS.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{\uppercase{Our contributions}}
 
@@ -289,13 +343,17 @@ to design and test.
 
 RIOT OS has been historically developed first on legacy ARM devices
 (ARM7TDMI-based MCUs), then ported on more recent microcontrollers
-(Cortex-M) and other architectures (MSP430 then AVR).
-The MSP430 port was, at the time we joined the project, yet immature
+(Cortex-M) and other architectures (MSP430 then AVR). However, the
+MSP430 port was, at the time we joined the project, yet immature
 and prone to crash.
 
-Our contribution can be summarized in three points:
+Our contribution can be summarized in four points:
 
 \begin{itemize}
+
+\item analysis of current OSes (TinyOS, Contiki, etc.) limitations,
+      and why they are incompatible with development of real-time
+      extensions like advanced MAC~/ RDC protocols;
 
 \item add debugging features to the RIOT OS kernel, more precisely
       a mechanism to handle fatal errors: crashed systems can be
@@ -310,47 +368,55 @@ Our contribution can be summarized in three points:
 \item debug the MSP430-specific portion of RIOT OS---more specifically:
       the hardware abstraction layer (HAL) of the task scheduler---making
       RIOT OS robust and production-ready on MSP430-based devices.
+      This also allows RIOT OS applications to be simulated with
+      the Cooja simulator \cite{Cooja}.
 
 \end{itemize}
 
 These contributions have been reviewed by RIOT's development team
-and integrated into the ``master'' branch of RIOT OS' Github repository;
-they also allowed us to be accepted into the development team of the OS.
+and integrated into the ``master'' branch of RIOT OS' Github repository
+(i.e.: they are now part of the standard code base of the system).
 
 Thanks to these achivements, we now have a robust and full-featured
 software platform for our work on high-performance MAC/RDC protocols.
 We thus have implemented one of our own designs, and obtained very
 promising results.
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{\uppercase{Use Case: implementing the S-CoSenS MAC protocol}}
 
-The first MAC/RDC protocol we wanted to implement is S-CoSenS, which
+The first MAC~/ RDC protocol we wanted to implement is S-CoSenS, which
 is conceived to work on top of the IEEE 802.15.4 physical layer.
 
 It is an evolution of the already published CoSenS protocol \cite{Cosens}:
-it add to the latter a sleeping period for energy saving.
-Thus, the basic principle of S-CoSenS is to delay the retransmission
-(routing) of received packets, by dividing the radio duty cycle in three
-periods: a sleeping period (SP), a waiting period (WP) where the radio medium
-is listened for collecting incoming 802.15.4 packets, and finally
-a transmission period (TP) for emitting adequately the packets enqueued
-during WP.
+it adds to the latter a sleeping period for energy saving.
+Thus, the basic principle of S-CoSenS is to delay the forwarding (routing)
+of received packets, by dividing the radio duty cycle in three periods:
+a sleeping period (SP), a waiting period (WP) where the radio medium
+is listened by routers for collecting incoming 802.15.4 packets, and
+finally a burst transmission period (TP) for emitting adequately
+the packets enqueued during WP.
 
 The main advantage of S-CoSenS is its ability to adapt dynamically to the
 wireless network throughput at runtime, but calculating for each radio duty
 cycle the length of SP and WP, according to the number of retransmitted
-packets during previous cycles.
+packets during previous cycles. It follows a ``sliding average''
+algorithm, where WP duration for each duty cycle is computed as:
 
-(d\'ecrire formules ici ?)
+\begin{displaymath}
+\mathrm{WP}_{n} = \alpha \cdot \mathrm{WP}_{n-1}
+                + (1 - \alpha) \cdot \overline{\mathrm{WP}}
+\end{displaymath}
 
-The synchronization between a S-CoSenS router and the other nodes of its
-PAN is done thanks to a beacon packet, that is broadcasted by the router
-at the beginning of each duty cycle. This beacon contains the length
-(in microseconds) of the SP and WP for the currently beginning duty cycle.
+The local synchronization between a S-CoSenS router and the other nodes
+of its PAN is done thanks to a beacon packet, that is broadcasted by
+the router at the beginning of each duty cycle. This beacon contains the
+duration (in microseconds) of the SP and WP for the currently beginning
+duty cycle.
 
-All the S-CoSenS duty cycle workflow is summarized in figure
-\ref{FigSCosensDutyCycle} hereafter.
+All the S-CoSenS duty cycle workflow for a PAN router is summarized
+in figure \ref{FigSCosensDutyCycle} hereafter.
 
 \begin{figure}[!h]
 \centering
@@ -392,16 +458,16 @@ All the S-CoSenS duty cycle workflow is summarized in figure
 \draw (3cm,-1cm)      .. controls +(0,0.25cm)  .. +(1.5cm,0.25cm);
 \draw (4.5cm,-0.75cm) .. controls +(1.5cm,0)   .. +(1.5cm,0.25cm);
 \end{tikzpicture}
-\caption{A typical S-CoSenS duty cycle.}
+\caption{A typical S-CoSenS router duty cycle.}
 \label{FigSCosensDutyCycle}
 \end{figure}
 
 We thus need to synchronize with enough precision different devices (that
 can be based on different hardware platforms) on duty cycles whose periods
 are dynamically calculated at runtime, with precision that needs to be
-in the range of tens of microseconds. This is where RIOT OS advanced
-real-time fetures really shine, while the other comparable OSes
-are for that purpose definitely lacking.
+in the sub-millisecond range. This is where RIOT OS advanced real-time
+features really shine, while the other comparable OSes are
+for that purpose definitely lacking.
 
 We have implemented S-CoSenS under RIOT, and made first tests by performing
 simulations---with Cooja---of a 802.15.4 PAN (Personal Area Network)
@@ -445,10 +511,10 @@ in figure \ref{FigPANtest}.
 \label{FigPANtest}
 \end{figure}
 
-Our first tests clearly show an excellent synchronization between the leaf
-nodes and the router, thanks to the precision offered by RIOT OS event
-management system (especially the availability of many hardware timers
-for direct use).
+Our first tests clearly show an excellent synchronization between the
+leaf nodes and the router, thanks to the precision offered by RIOT OS
+event management system (especially the availability of many hardware
+timers for direct use).
 
 (Figure: copie \'ecran Cooja)
 
@@ -458,11 +524,12 @@ both transceiver and processing power:
 
 (tableau)
 
-While we weren't able to quantize energy consumption yet, we can reasonably
-think that lowering activity of MCU and radio transceiver will consequently
-reduce the energy consumption of devices running RIOT OS. This will be
-the subject of some of our future research works.
+While we weren't able to accurately quantize energy consumption yet, we can
+reasonably think that lowering activity of MCU and radio transceiver will
+significantly reduce the energy consumption of devices running RIOT OS.
+This will be the subject of some of our future research works.
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{\uppercase{Future Works and Conclusion}}
 
@@ -476,7 +543,8 @@ We plan, in a near future:
       microcrontrollers based on ARM Cortex-M architecture (especially
       Cortex-M3 and Cortex-M4), and we intend to help in this porting
       effort, especially on high-end IoT motes we seek to use in our
-      works (e.g.: as advanced ``highly-featured'' nodes, or routers);
+      works (e.g.: as advanced FFD nodes with full network stack,
+      or routers);
 
 \item to use the power of this OS to further advance our work on MAC/RDC
       protocols; more precisely, we are implementing other innovative
@@ -487,7 +555,6 @@ We plan, in a near future:
 \end{itemize}
 
 \bigskip
-(\`A discuter.)
 
 In conclusion, we can consider that we have actively contributed to the
 development of a high-quality, full-featured, open-source software platform
@@ -507,6 +574,7 @@ computing world. We plan to both participate in its development,
 and leverage its growth to further advance our work on networking
 as far as possible.
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section*{\uppercase{Acknowledgements}}
 
