@@ -7,7 +7,7 @@
 \usepackage{amstext}
 \usepackage{amsmath}
 \usepackage{amsthm}
-
+\usepackage{graphicx}
 \usepackage{multicol}
 \usepackage[small]{caption}
 
@@ -514,20 +514,84 @@ in figure \ref{FigPANtest}.
 Our first tests clearly show an excellent synchronization between the
 leaf nodes and the router, thanks to the precision offered by RIOT OS
 event management system (especially the availability of many hardware
-timers for direct use).
+timers for direct use). This can be seen in the screenshot of our
+simulation in Cooja, shown in figure \ref{Screenshot}. For readability,
+the central portion of the timeline window of that screenshot (delimited
+by a thick yellow rectangle) is zoomed on in figure \ref{ZoomTimeline}.
 
-(Figure: copie \'ecran Cooja)
+\begin{figure*}[ptb]
+\centering
+\includegraphics[width=15.5cm]{S-CoSenS-Cooja10.png}
+\caption{Screenshot of our test simulation in Cooja.}
+\label{Screenshot}
+\end{figure*}
 
-We were also able to collect data on duty cycle activity for both radio
-transceivers and MCUs, they show RIOT allows for a very sparse use of
-both transceiver and processing power:
+\begin{figure*}[pbt]
+\centering
+\includegraphics{S-CoSenS-Cooja10-Timeline.png}
+\caption{Zoom on the central part of the timeline of our simulation.}
+\label{ZoomTimeline}
+\end{figure*}
 
-(tableau)
+On figure \ref{ZoomTimeline}, the numbers on the left side are motes'
+numerical IDs: the router has ID number \textsf{1}, while the leaf nodes
+have IDs \textsf{2} to \textsf{11}. Grey bars represent radio transceiver
+being online for a given mote; blue bars represent packet emission, and green
+bars correct packet reception, while red bars represent collision (when
+two or more devices emit data concurrently) and thus reception of
+undecipherable radio signals.
 
-While we weren't able to accurately quantize energy consumption yet, we can
-reasonably think that lowering activity of MCU and radio transceiver will
-significantly reduce the energy consumption of devices running RIOT OS.
-This will be the subject of some of our future research works.
+Figure \ref{ZoomTimeline} represents a short amount of time (around
+50~milliseconds), representing the end of a duty cycle of the router:
+the first 10~milliseconds are the end of SP, and 40 remaining milliseconds
+the WP, then the beginning of a new duty cycle (the TP has been disabled
+in our simulation). 
+
+In our example, four nodes have data to transmit to the router: the motes
+number \textsf{3}, \textsf{5}, \textsf{9}, and \textsf{10}; the other nodes
+(\textsf{2}, \textsf{4}, \textsf{6}, \textsf{7}, \textsf{8}, and \textsf{11})
+are preparing to transmit a packet in the next duty cycle.
+
+At the instant marked by the first yellow arrow (in the top left of figure
+\ref{ZoomTimeline}), the SP ends and the router activates its radio
+transceiver to enter WP. Note how the four nodes that are to send packets
+(\textsf{3}, \textsf{5}, \textsf{9}, and \textsf{10}) do also activate their
+radio transceivers \emph{precisely} at the same instant: this is thanks to
+RIOT OS precise real-time mechanism (based on hardware timers), that allows
+to the different nodes to precisely synchronize on the timing values
+transmitted in the previous beacon packet. Thanks also to that mechanism,
+the nodes are able to keep both their radio transceiver \emph{and} their
+MCU in low-power mode, since RIOT OS kernel is interrupt-driven.
+
+During the waiting period, we also see that several collisions occur; they
+are resolved by the S-CoSenS protocol by forcing motes to wait a random
+duration before re-emitting a packet in case of conflict. In our example,
+our four motes can finally transmit their packet to the router in that
+order: \textsf{3} (after a first collision), \textsf{5}, \textsf{10} (after
+two other collisions), and finally \textsf{9}. Note that every time the
+router (device number \textsf{1}) successfully receives a packet, an
+acknowledgement is sent back to emitter: see the very thin blue bars that
+follow each green bar on the first line.
+
+Finally, at the instant marked by the second yellow arrow (in the top right
+of figure \ref{ZoomTimeline}), WP ends and a new duty cycle begins.
+Consequently, the router broadcasts a beacon packet containing PAN timing and
+synchronization data to all of the ten nodes. You can see that all of the
+six nodes waiting to transmit (\textsf{2}, \textsf{4}, \textsf{6}, \textsf{7},
+\textsf{8}, and \textsf{11}) go idle after receiving this beacon (beacon
+packets are broadcasted and thus not to be acknowledged): they go
+into low-power mode (both at radio transceiver and MCU level), and will
+take advantage of RIOT real-time features to wake up precisely when
+the router goes back into WP mode and is ready to receive their
+packets.
+
+\medskip
+
+Also note: while we weren't able to accurately quantize energy consumption
+yet, we can reasonably think that lowering activity of MCU and radio
+transceiver will significantly reduce the energy consumption of devices
+running RIOT OS. This will be the subject of some of our future
+research works.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
