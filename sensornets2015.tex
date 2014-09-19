@@ -220,13 +220,17 @@ MAC~/ RDC protocols---or at least makes it very hard;
 indirectly, most of the Contiki basic functions (i.e.: kernel, network
 stack, etc.), because these functions are not designed to handle pre-emption.
 Contiki is indeed based on cooperative multithreading, whereas the
-\texttt{rtimer} mechanism is a ``paradigm breake''.
-Only functions that run with all interrupts disabled (like
+\texttt{rtimer} mechanism seems like a ``independent feature'', coming
+with its own paradigm.
+Only a precise set of functions known as ``interrupt-safe'' (like
 \texttt{process\_poll()}) can be safely invoked from \texttt{rtimer},
 using other parts of Contiki's meaning almost certainly crash or
 unpredictable behaviour. This restriction practically makes it very
 difficult to write Contiki extensions (like network stack layer drivers)
 using \texttt{rtimer}.
+
+% for process_poll() and interrupt-safe functions reference, see:
+%  https://github.com/contiki-os/contiki/wiki/Timers#The_Rtimer_Library
 
 \end{itemize}
 
@@ -274,7 +278,7 @@ specialized in the domain of low-power, embedded wireless sensors.
 It offers many interesting features, that we will now describe.
 
 It provides the basic benefits of an OS: portability (it has been ported
-to many devices powered by ARM, MSP430, and---more recently---AVR
+to many devices powered by ARM, MSP430, and---more recently---AVR8
 microcontrollers) and a comprehensive set of features, including
 a network stack.
 
@@ -407,7 +411,6 @@ wireless network throughput at runtime, by calculating for each radio duty
 cycle the length of SP and WP, according to the number of retransmitted
 packets during previous cycles. It follows a ``sliding average''
 algorithm, where WP duration for each duty cycle is computed as:
-
 \begin{displaymath}
 \overline{\mathrm{WP}}_{n} = \alpha \cdot \overline{\mathrm{WP}_{n-1}}
                 + (1 - \alpha) \cdot \mathrm{WP}_{n-1}
@@ -529,9 +532,10 @@ by a thick yellow rectangle) is zoomed on in figure \ref{ZoomTimeline}.
 
 \begin{figure*}[ptb]
 \centering
-\includegraphics[width=15.5cm]{S-CoSenS-Cooja10.png}
+\includegraphics[width=15.75cm]{S-CoSenS-Cooja10.png}
 \caption{Screenshot of our test simulation in Cooja. 
-(Despite the window title mentioning Contiki, the application  is indeed simulated  running on RIOT OS)}
+(Despite the window title mentioning Contiki, the simulated application
+ is indeed running on RIOT OS.)}
 \label{Screenshot}
 \end{figure*}
 
