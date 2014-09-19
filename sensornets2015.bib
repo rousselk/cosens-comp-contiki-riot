@@ -3,8 +3,9 @@
   AUTHOR =      {O. Hahm and E. Baccelli and M. G\"unes and M. W\"ahlisch
                  and T. C. Schmidt},
   TITLE =      {{RIOT OS: Towards an OS for the Internet of Things}},
-  BOOKTITLE =   {32nd IEEE International Conference on Computer Communications
-                 (INFOCOM'2013 -- Poster Session)},
+  BOOKTITLE =   {32nd IEEE International Conference
+                 on Computer Communications},
+  SERIES =      {INFOCOM 2013, Poster Session},
   YEAR =        {2013},
   MONTH =       {April},
   NOTE =        {\texttt{http://www.riot-os.org/}}
@@ -14,9 +15,12 @@
   AUTHOR =      {A. Dunkels and B. Gr\"onvall and T. Voigt},
   TITLE =      {{Contiki -- a Lightweight and Flexible Operating System
                  for Tiny Networked Sensors}},
-  BOOKTITLE =   {Proceedings of the First IEEE Workshop
-                 on Embedded Networked Sensors (Emnets-I)},
+  BOOKTITLE =   {Proceedings of the 29th Annual IEEE International
+                 Conference on Local Computer Networks},
+  SERIES =      {LCN '04},
+  PAGES =       {455--462},
   YEAR =        {2004},
+  PUBLISHER =   {IEEE Computer Society},
   NOTE =        {\texttt{http://www.contiki-os.org/}}
 }
 
@@ -25,8 +29,11 @@
   TITLE =      {{Full TCP/IP for 8-bit architectures}},
   BOOKTITLE =   {Proceedings of the First ACM/Usenix International
                  Conference on Mobile Systems, Applications and
-                 Services (MobiSys 2003)},
-  YEAR =        {2003}
+                 Services},
+  SERIES =      {MobiSys '03},
+  PAGES =       {85--98},
+  YEAR =        {2003},
+  PUBLISHER =   {ACM}
 }
 
 @INPROCEEDINGS{Rime,
@@ -34,56 +41,104 @@
   TITLE =       {Rime --- A Lightweight Layered Communication Stack
                  for Sensor Networks},
   BOOKTITLE =   {Proceedings of the European Conference on Wireless
-                 Sensor Networks (EWSN), Poster/Demo session},
+                 Sensor Networks},
+  SERIES =      {EWSN, Poster/Demo session},
   YEAR =        {2007}
 }
 
 @INPROCEEDINGS{Cooja,
   AUTHOR =      {F. \"Osterlind and A. Dunkels and J. Eriksson and N. Finne
                  and T. Voigt},
-  TITLE =      {{Cross-level Sensor Network Simulation with Cooja}},
-  BOOKTITLE =   {Proceedings of the First IEEE International Workshop
-                 on Practical Issues in Building Sensor Network Applications
-                 (SenseApp 2006)},
-  YEAR =        {2006}
+  TITLE =      {{Cross-Level Sensor Network Simulation with Cooja}},
+  BOOKTITLE =   {Proceedings of the 31st Annual IEEE International
+                 Conference on Local Computer Networks},
+  SERIES =      {LCN '06},
+  PAGES =       {641--648},
+  YEAR =        {2006},
+  PUBLISHER =   {IEEE Computer Society}
 }
 
 @TECHREPORT{ContikiMAC,
   AUTHOR =      {A. Dunkels},
   TITLE =      {{The ContikiMAC Radio Duty Cycling Protocol}},
   INSTITUTION = {Swedish Institute of Computer Science},
+  NUMBER =      {T2011:13},
   YEAR =        {2011}
 }
 
 @INPROCEEDINGS{Protothreads,
-  AUTHOR =      {A. Dunkels and O. Schmidt and T. Voigt},
-  TITLE =      {{Using Protothreads for Sensor Node Programming}},
-  BOOKTITLE =   {Proceedings of the REALWSN 2005 (Workshop
-                 on RealWorld Wireless Sensor Networks)},
-  YEAR =        {2005}
+  AUTHOR =      {A. Dunkels and O. Schmidt and T. Voigt and M. Ali},
+  TITLE =      {{Protothreads: Simplifying Event-Driven Programming
+                 of Memory-Constrained Embedded Systems}},
+  BOOKTITLE =   {Proceedings of the 4th ACM International Conference
+                 on Embedded Networked Sensor Systems},
+  SERIES =      {SenSys '06},
+  PAGES =       {29--42},
+  YEAR =        {2006},
+  PUBLISHER =   {ACM}
 }
 
-@INPROCEEDINGS{TinyOS,
+@INCOLLECTION{TinyOS,
   AUTHOR =      {P. Levis and S. Madden and J. Polastre and R. Szewczyk
-                 and A. Woo and D. Gay and J. Hill and M. Welsh
-                 and E. Brewer and D. Culler},
-  TITLE =      {{TinyOS: An operating system for sensor networks}},
+                 and K. Whitehouse and A. Woo and D. Gay and J. Hill
+                 and M. Welsh and E. Brewer and D. Culler},
+  TITLE =      {{TinyOS: An Operating System for Sensor Networks}},
   BOOKTITLE =   {Ambient Intelligence},
-  YEAR =        {2004},
-  PUBLISHER =   {Springer Verlag},
+  PAGES =       {115--148},
+  YEAR =        {2005},
+  PUBLISHER =   {Springer Berlin Heidelberg},
   NOTE =        {\texttt{http://www.tinyos.net/}}
 }
 
-@MISC{TOSSIM,
+@INPROCEEDINGS{TOSSIM,
   AUTHOR =      {P. Levis and N. Lee and M. Welsh and D. Culler},
   TITLE =      {{TOSSIM: Accurate and Scalable Simulation
                  of Entire TinyOS Applications}},
-  YEAR =        {2003}
+  BOOKTITLE =   {Proceedings of the 1st ACM International Conference
+                 on Embedded Networked Sensor Systems},
+  SERIES =      {SenSys '03},
+  PAGES =       {126--137},
+  YEAR =        {2003},
+  PUBLISHER =   {ACM}
 }
 
-@MISC{Cosens,
+@INPROCEEDINGS{CosensConf,
   AUTHOR =      {B. Nefzi and Y.-Q. Song},
   TITLE =      {{CoSenS: a Collecting and Sending Burst Scheme for
                  Performance Improvement of IEEE 802.15.4}},
-  YEAR =        {2010}
+  BOOKTITLE =   {Proceedings of the 35th Annual IEEE International
+                 Conference on Local Computer Networks},
+  SERIES =      {LCN '10},
+  PAGES =       {172--175},
+  YEAR =        {2010},
+  PUBLISHER =   {IEEE Computer Society}
 }
+
+@ARTICLE{CosensJournal,
+  AUTHOR =      {B. Nefzi and Y.-Q. Song},
+  TITLE =      {{QoS for Wireless Sensor Networks: Enabling Service
+                 Differentiation at the MAC Sub-layer Using CoSenS}},
+  JOURNAL =     {Ad Hoc Networks},
+  ISSUE_DATE =  {June, 2012},
+  VOLUME =      {10},
+  NUMBER =      {4},
+  PAGES =       {680--695},
+  MONTH =       June,
+  YEAR =        {2012},
+  PUBLISHER =   {Elsevier Science Publishers B. V.}
+}
+
+@INPROCEEDINGS{iQueueMAC,
+  AUTHOR =      {S. Zhuo and Z. Wang and Y.-Q. Song and Z. Wang
+                 and L. Almeida},
+  TITLE =      {{iQueue-MAC: A traffic adaptive duty-cycled MAC protocol
+                 with dynamic slot allocation}},
+  BOOKTITLE =   {Proceedings of the 10th Annual IEEE Communications
+                 Society Conference on Sensor, Mesh and Ad Hoc
+                 Communications and Networks},
+  SERIES =      {SECON 2013},
+  PAGES =       {95--103},
+  YEAR =        {2013},
+  PUBLISHER =   {IEEE Communications Society}
+}
+
