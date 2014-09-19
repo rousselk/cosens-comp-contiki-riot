@@ -267,6 +267,20 @@ or very limited, or proprietary and commercial software; and most of them
 are tied to a peculiar piece of hardware, thus ruining
 the portability advantage offered by the OS.)
 
+\medskip
+
+To summarize our problem, we needed an OS:
+\begin{itemize}
+\item adapted to the limitations of the deeply-embedded MCUs that constitute
+      the WSN/IoT motes;
+\item that provides real-time features powerful enough to support the
+      development of advanced, high-performance MAC~/ RDC protocols;
+\item that includes a network stack (even a basic one) adapted to wireless
+      communication on 802.15.4 radio medium.
+\end{itemize}
+None of the established OSes commonly used either in the IoT domain (TinyOS,
+Contiki) nor in the larger spectrum of RTOS (FreeRTOS) could match our needs.
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{\uppercase{The RIOT Operating System}}
@@ -329,6 +343,13 @@ and consumes little memory. We consequently believe that the current
 situation is due to the immaturity of higher layers of RIOT network stack,
 and that in the future MSP430-based devices could be used as FFD with RIOT OS.
 
+\medskip
+
+When we began to work with RIOT, it also had two other problems: the MSP430
+versions were not stable enough to make real use of the platform, and there
+was absolutely no work related to the MAC~/ RDC layer had been done
+on that system. This is where our contributions fit in.
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{\uppercase{Our contributions}}
@@ -387,7 +408,7 @@ Our contribution can be summarized in four points:
 
 \end{enumerate}
 
-As a proof of concept of this last contribution, we have thus implemented one
+As a proof of concept of this last statement, we have implemented one
 of our own designs, and obtained very promising results.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -624,6 +645,18 @@ We plan, in a near future:
 
 \end{itemize}
 
+RIOT is a powerful real-time operating system, adapted to the limitations
+of deeply embedded hardware microcontrollers, while offering state-of-the-art
+techniques (preemptive multitasking, tickless scheduler, optimal use
+of hardware timers) that---we believe---makes it on par with
+the best OSes of the embedded and real-time world.
+
+While we weren't able to accurately quantize energy consumption
+yet, we can reasonably think that lowering activity of MCU and radio
+transceiver will significantly reduce the energy consumption of devices
+running RIOT OS. This will be the subject of some of our future
+research works.
+
 \bigskip
 
 In conclusion, we can consider that we have actively contributed to the
@@ -639,20 +672,6 @@ for the domain of WSN, IoT, and even more largely of embedded computing:
       a layer in its network stack).
 
 \end{itemize}
-
-Indeed, RIOT is a powerful real-time operating system, adapted to the
-limitations of deeply embedded hardware microcontrollers, especially
-in terms of minimization of memory footprint and energy consumption.
-Nonetheless, it offers state-of-the-art techniques (preemptive
-multitasking, tickless scheduler, optimal use of hardware timers)
-that---we believe---makes it on par with the best OSes of the
-embedded and real-time world.
-
-While we weren't able to accurately quantize energy consumption
-yet, we can reasonably think that lowering activity of MCU and radio
-transceiver will significantly reduce the energy consumption of devices
-running RIOT OS. This will be the subject of some of our future
-research works.
 
 We are sincerely convinced that it will play an increasing role in
 the WSN/IoT scene, and---hopefully---more generally in the embedded
