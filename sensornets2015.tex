@@ -50,13 +50,13 @@ domain cannot provide such features. On the other hand, ``bare-metal''
 development sacrifices portability, as well as the multitasking abilities
 needed to develop the rich applications that are useful in the domain of
 the Internet of Things.\\
-We describe in this paper the development of a port of RIOT OS
-on the MSP430 microcontroller architecture widely used in IoT-enabled motes.
-RIOT OS offers rich and advanced  real-time features, especially the
-simultaneous use of as many hardware timers as the underlying platform (MCU)
-can offer. We then demonstrate the power of these features by providing
-a new implementation of S-CoSenS, an efficient MAC protocol that uses
-very low processing power and energy.}
+We describe in this paper how we contributed to the development of a port of
+RIOT OS on the MSP430 microcontroller architecture widely used in IoT-enabled
+motes. RIOT OS offers rich and advanced real-time features, especially the
+simultaneous use of as many hardware timers as the underlying platform
+(microcontroller) can offer. We then demonstrate the power of these features
+by presenting a new implementation of S-CoSenS, an efficient MAC protocol
+that uses very low processing power and energy.}
 
 
 \onecolumn \maketitle \normalsize \vfill
@@ -267,19 +267,20 @@ or very limited, or proprietary and commercial software; and most of them
 are tied to a peculiar piece of hardware, thus ruining
 the portability advantage offered by the OS.)
 
-\medskip
+\bigskip
 
 To summarize our problem, we needed an OS:
 \begin{itemize}
 \item adapted to the limitations of the deeply-embedded MCUs that constitute
-      the WSN/IoT motes;
+      the core of WSN/IoT motes;
 \item that provides real-time features powerful enough to support the
       development of advanced, high-performance MAC~/ RDC protocols;
 \item that includes a network stack (even a basic one) adapted to wireless
-      communication on 802.15.4 radio medium.
+      communication on 802.15.4 radio medium;
 \end{itemize}
-None of the established OSes commonly used either in the IoT domain (TinyOS,
-Contiki) nor in the larger spectrum of RTOS (FreeRTOS) could match our needs.
+but none of the established OSes commonly used either in the IoT domain
+(TinyOS, Contiki) nor in the larger spectrum of RTOS (FreeRTOS)
+could match our needs.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -292,7 +293,7 @@ specialized in the domain of low-power, embedded wireless sensors.
 It offers many interesting features, that we will now describe.
 
 It provides the basic benefits of an OS: portability (it has been ported
-to many devices powered by ARM, MSP430, and---more recently---AVR8
+to many devices powered by ARM, MSP430, and---more recently---AVR
 microcontrollers) and a comprehensive set of features, including
 a network stack.
 
@@ -346,8 +347,8 @@ and that in the future MSP430-based devices could be used as FFD with RIOT OS.
 \medskip
 
 When we began to work with RIOT, it also had two other problems: the MSP430
-versions were not stable enough to make real use of the platform, and there
-was absolutely no work related to the MAC~/ RDC layer had been done
+versions were not stable enough to make real use of the platform, and
+absolutely no work related to the MAC~/ RDC layer had been done
 on that system. This is where our contributions fit in.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -433,10 +434,10 @@ cycle the length of SP and WP, according to the number of retransmitted
 packets during previous cycles. It follows a ``sliding average''
 algorithm, where WP duration for each duty cycle is computed as:
 \begin{displaymath}
-\overline{\mathrm{WP}}_{n} = \alpha \cdot \overline{\mathrm{WP}_{n-1}}
+\overline{\mathrm{WP}_{n}} = \alpha \cdot \overline{\mathrm{WP}_{n-1}}
                 + (1 - \alpha) \cdot \mathrm{WP}_{n-1}
 \end{displaymath}
-where $\overline{\mathrm{WP}}_{n}$ and $\overline{\mathrm{WP}_{n-1}}$
+where $\overline{\mathrm{WP}_{n}}$ and $\overline{\mathrm{WP}_{n-1}}$
 are respectively the average WP length at $n^{\mathrm{th}}$ and
 $(n-1)^{\mathrm{th}}$ cycle, and $\mathrm{WP}_{n-1}$ is the actual
 length of the $(n-1)^{\mathrm{th}}$ cycle.
@@ -673,9 +674,9 @@ for the domain of WSN, IoT, and even more largely of embedded computing:
 
 \end{itemize}
 
-We are sincerely convinced that it will play an increasing role in
-the WSN/IoT scene, and---hopefully---more generally in the embedded
-computing world. We plan to both participate in its development,
+We are sincerely convinced that this platform will play an increasing role
+in the WSN/IoT scene, and---hopefully---more generally in the embedded
+computing world. We plan to both contribute again to its development,
 and leverage its growth to further advance our work on networking
 as far as possible.
 
