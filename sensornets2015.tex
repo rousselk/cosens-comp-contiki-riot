@@ -124,7 +124,7 @@ Like for the radio transceiver, using the MCU efficiently while keeping
 the system efficient and reactive means optimal use of interruptions,
 and hardware timers for synchronization.
 
-Thus, in both cases, we need to optimally use interruptions, and hardware
+Thus, in both cases, we need to optimally use interruptions as well as hardware
 timers. Being able to use them both efficiently without too much hassle
 implies the use of a specialized operating system (OS), especially
 to easily benefit from multitasking abilities. That is what we will
@@ -269,16 +269,16 @@ the portability advantage offered by the OS.)
 
 \bigskip
 
-To summarize our problem, we needed an OS:
+To summarize the issue, what is required is an OS that:
 \begin{itemize}
-\item adapted to the limitations of the deeply-embedded MCUs that constitute
+\item is adapted to the limitations of the deeply-embedded MCUs that constitute
       the core of WSN/IoT motes;
-\item that provides real-time features powerful enough to support the
+\item provides real-time features powerful enough to support the
       development of advanced, high-performance MAC~/ RDC protocols;
-\item that includes a network stack (even a basic one) adapted to wireless
+\item includes a network stack (even a basic one) adapted to wireless
       communication on 802.15.4 radio medium;
 \end{itemize}
-but none of the established OSes commonly used either in the IoT domain
+However,  none of the established OSes commonly used either in the IoT domain
 (TinyOS, Contiki) nor in the larger spectrum of RTOS (FreeRTOS)
 could match our needs.
 
