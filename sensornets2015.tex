@@ -347,9 +347,9 @@ and that in the future MSP430-based devices could be used as FFD with RIOT OS.
 \medskip
 
 When we began to work with RIOT, it also had two other problems: the MSP430
-versions were not stable enough to make real use of the platform, and
-absolutely no work related to the MAC~/ RDC layer had been done
-on that system. This is where our contributions fit in.
+versions were not stable enough to make real use of the platform; and
+beyond basic CSMA/CA, no work related to the MAC~/ RDC layer had been
+done on that system. This is where our contributions fit in.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -358,21 +358,20 @@ on that system. This is where our contributions fit in.
 For our work, we use---as our main hardware platform---IoT motes built
 around MSP430 microcontrollers.
 
-MSP430 is a microcontroller (MCU) architecture, offering very low-power
-consumption, cheap price, and good performance thanks to a custom 16-bit
-RISC design. This architecture is very common in IoT motes.
+MSP430 is a microcontroller (MCU) architecture from Texas Instruments,
+offering very low-power consumption, cheap price, and good performance thanks
+to a custom 16-bit RISC design. This architecture is very common in IoT motes.
 It is also very well supported, especially by the Cooja simulator
-provided by the Contiki project \cite{Cooja}, which makes simulations
-of network scenarios (especially with many devices) much easier
-to design and test.
+\cite{Cooja}, which makes simulations of network scenarios---especially
+with many devices---much easier to design and test.
 
 RIOT OS has historically been developed first on legacy ARM devices
 (ARM7TDMI-based MCUs), then ported on more recent microcontrollers
-(Cortex-M) and other architectures (MSP430 then AVR). However, the
-MSP430 port was, before we improved it, yet immature and prone
-to crash.
+(ARM Cortex-M) and other architectures (MSP430 then AVR). However,
+the MSP430 port was, before we improved it, yet immature and
+prone to crash.
 
-Our contribution can be summarized in four points:
+Our contribution can be summarized in the following points:
 
 \begin{enumerate}
 
