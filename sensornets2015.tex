@@ -51,13 +51,13 @@ development sacrifices portability, as well as the multitasking abilities
 needed to develop the rich applications that are useful in the domain of
 the Internet of Things.\\
 We describe in this paper how we helped solving these issues by contributing 
-to the development of a port of
-RIOT OS on the MSP430 microcontroller, an architecture widely used in
-IoT-enabled motes. RIOT OS offers rich and advanced real-time features,
-especially the simultaneous use of as many hardware timers as the underlying
-platform (microcontroller) can offer. We then demonstrate the effectiveness
-of these features by presenting a new implementation, on RIOT OS, of S-CoSenS,
-an efficient MAC protocol that uses very low processing power and energy.}
+to the development of a port of RIOT OS on the MSP430 microcontroller, an
+architecture widely used in IoT-enabled motes. RIOT OS offers rich and
+advanced real-time features, especially the simultaneous use of as many
+hardware timers as the underlying platform (microcontroller) can offer.
+We then demonstrate the effectiveness of these features by presenting
+a new implementation, on RIOT OS, of S-CoSenS, an efficient MAC protocol
+that uses very low processing power and energy.}
 
 
 \onecolumn \maketitle \normalsize \vfill
@@ -676,11 +676,17 @@ for the domain of WSN, IoT, and even more largely of embedded computing:
 
 \end{itemize}
 
-We are sincerely convinced that this platform will play an increasing role
-in the WSN/IoT scene, and---hopefully---more generally in the embedded
-computing world. We plan to both contribute again to its development,
-and leverage its growth to further advance our work on networking
-as far as possible.
+Currently, RIOT OS supports high-level IoT protocols (6LoWPAN/IPv6, RPL,
+TCP, UDP, etc.). However, it still lacks high-performance MAC~/ RDC layer
+protocols.
+
+Through this work, we have shown that RIOT OS is also suitable for
+implementing high-performance MAC~/ RDC protocols, thanks to its real-time
+features (especially hardware timers management).
+
+Moreover, we have improved the robustness of the existing ports of RIOT OS
+on MSP430, making it a suitable software platform for tiny motes and devices.
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
