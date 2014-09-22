@@ -45,18 +45,18 @@
 real-time features, to be able to synchronize correctly between different
 unrelated devices. Such features are highly desirable for operating
 wireless sensor networks (WSN) that are designed to be part of the Internet
-of Things (IoT). Unfortunately, the existing operating systems commonly used in this
+of Things (IoT). Unfortunately, the operating systems commonly used in this
 domain cannot provide such features. On the other hand, ``bare-metal''
 development sacrifices portability, as well as the multitasking abilities
 needed to develop the rich applications that are useful in the domain of
 the Internet of Things.\\
 We describe in this paper how we contributed to the development of a port of
-RIOT OS on the MSP430 microcontroller, an architecture widely used in IoT-enabled
-motes. RIOT OS offers rich and advanced real-time features, especially the
-simultaneous use of as many hardware timers as the underlying platform
-(microcontroller) can offer. We then demonstrate the effectiveness  of these features
-by presenting a new implementation of S-CoSenS, an efficient MAC protocol
-that uses very low processing power and energy.}
+RIOT OS on the MSP430 microcontroller, an architecture widely used in
+IoT-enabled motes. RIOT OS offers rich and advanced real-time features,
+especially the simultaneous use of as many hardware timers as the underlying
+platform (microcontroller) can offer. We then demonstrate the effectiveness
+of these features by presenting a new implementation of S-CoSenS,
+an efficient MAC protocol that uses very low processing power and energy.}
 
 
 \onecolumn \maketitle \normalsize \vfill
@@ -124,9 +124,9 @@ Like for the radio transceiver, using the MCU efficiently while keeping
 the system efficient and reactive means optimal use of interruptions,
 and hardware timers for synchronization.
 
-Thus, in both cases, we need to optimally use interruptions as well as hardware
-timers. Being able to use them both efficiently without too much hassle
-implies the use of a specialized operating system (OS), especially
+Thus, in both cases, we need to optimally use interruptions as well as
+hardware timers. Being able to use them both efficiently without too much
+hassle implies the use of a specialized operating system (OS), especially
 to easily benefit from multitasking abilities. That is what we will
 discuss in this paper.
 
@@ -271,14 +271,14 @@ the portability advantage offered by the OS.)
 
 To summarize the issue, what is required is an OS that:
 \begin{itemize}
-\item is adapted to the limitations of the deeply-embedded MCUs that constitute
-      the core of WSN/IoT motes;
+\item is adapted to the limitations of the deeply-embedded MCUs that
+      constitute the core of WSN/IoT motes;
 \item provides real-time features powerful enough to support the
       development of advanced, high-performance MAC~/ RDC protocols;
 \item includes a network stack (even a basic one) adapted to wireless
-      communication on 802.15.4 radio medium;
+      communication on 802.15.4 radio medium.
 \end{itemize}
-However,  none of the established OSes commonly used either in the IoT domain
+However, none of the established OSes commonly used either in the IoT domain
 (TinyOS, Contiki) nor in the larger spectrum of RTOS (FreeRTOS)
 could match our needs.
 
@@ -409,7 +409,8 @@ Our contribution can be summarized in the following points:
 \end{enumerate}
 
 As a proof of concept of this last statement, we have implemented one
-of our own designs, and obtained very promising results, shown in the next section.
+of our own designs, and obtained very promising results, shown in
+the next section.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -687,7 +688,7 @@ as far as possible.
 %especially the core development team, for their kind welcome
 %in the RIOT project, and their enhtusiasm and friendliness
 %toward us. And, of course, for designing and publishing
-%this awesome software platform.
+%such a great software platform.
 
 
 \vfill
