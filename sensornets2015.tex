@@ -496,9 +496,9 @@ in figure \ref{FigSCosensDutyCycle} hereafter.
 \label{FigSCosensDutyCycle}
 \end{figure}
 
-We thus need to synchronize with enough precision different devices (that
+We thus need to synchronize with enough accuracy different devices (that
 can be based on different hardware platforms) on duty cycles whose periods
-are dynamically calculated at runtime, with precision that needs to be
+are dynamically calculated at runtime, with resolution that needs to be
 in the sub-millisecond range. This is where RIOT OS advanced real-time
 features really shine, while the other comparable OSes are
 for that purpose definitely lacking.
@@ -546,7 +546,7 @@ in figure \ref{FigPANtest}.
 \end{figure}
 
 Our first tests clearly show an excellent synchronization between the
-leaf nodes and the router, thanks to the precision offered by RIOT OS
+leaf nodes and the router, thanks to the time resolution offered by RIOT OS
 event management system (especially the availability of many hardware
 timers for direct use). This can be seen in the screenshot of our
 simulation in Cooja, shown in figure \ref{Screenshot}. For readability,
