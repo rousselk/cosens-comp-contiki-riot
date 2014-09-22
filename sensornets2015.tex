@@ -311,7 +311,7 @@ the WSN/IoT domain:
       used concurrently (especially since the kernel is tickless), offering
       the ability to schedule actions with high granularity; on low-end
       devices, based on MSP430 architecture, events can be scheduled
-      with a precision of 32~microseconds;
+      with a resolution of 32~microseconds;
 
 \item RIOT is entirely written in \emph{standard C language}; but unlike
       Contiki, there are no restrictions on usable constructs (i.e.: like
@@ -640,9 +640,10 @@ We plan, in a near future:
 
 \item to use the power of this OS to further advance our work on MAC/RDC
       protocols; more precisely, we are implementing other innovative
-      MAC/RDC protocols under RIOT, taking advantage of its high-precision
-      real-time features to obtain excellent performance, optimal energy
-      consumption, and out-of-the-box portability.
+      MAC/RDC protocols---such as iQueue-MAC \cite{iQueueMAC}---under RIOT,
+      taking advantage of its high-resolution real-time features to obtain
+      excellent performance, optimal energy consumption, and out-of-the-box
+      portability.
 
 \end{itemize}
 
