@@ -187,11 +187,9 @@ a specifically developed, ContikiMAC, has been published in 2011
 \cite{ContikiMAC} and implemented into Contiki as the default
 RDC protocol (designed to be used with standard CSMA/CA as MAC layer).
 
-The study of the implementation of ContikiMAC, however, shows
-the limitations of the Contiki OS: the corresponding C code features
-relatively high complexity; and, more importantly, use of ``busy-wait''
-for synchronization of many events (like managing the acknowledgement
-of transmitted packets), thus increasing energy consumption.
+However, Contiki's extremely compact footprint and high optimization comes
+at the cost of some limitations that prevented us from using it as our
+software platform.
 
 Contiki OS is indeed not a real-time OS: the processing of ``events''---using
 Contiki's terminology---is made by using the kernel's scheduler, which is
@@ -327,7 +325,7 @@ The first three features listed hereabove make RIOT a full-fledged
 \emph{real-time} operating system.
 
 We also believe that the tickless kernel and the optimal use of hardware
-timers should make RIOT OS the ideal software platform to optimize energy
+timers should make RIOT OS a very suited software platform to optimize energy
 consumption on battery-powered, MCU-based devices.
 
 A drawback of RIOT, compared to TinyOS or Contiki, is its higher memory
@@ -415,10 +413,13 @@ the next section.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{\uppercase{Use Case: implementing the S-CoSenS MAC protocol}}
+\section{\uppercase{Use Case: implementing the S-CoSenS RDC protocol}}
 
-The first MAC~/ RDC protocol we wanted to implement is S-CoSenS, which
-is designed to work on top of the IEEE 802.15.4 physical layer.
+\subsection{The S-CoSenS Protocol}
+
+The first protocol we wanted to implement is S-CoSenS, which
+is designed to work on top of the IEEE 802.15.4 physical and MAC
+(i.e.: CSMA/CA) layers.
 
 It is an evolution of the already published CoSenS protocol \cite{CosensConf}:
 it adds to the latter a sleeping period for energy saving.
@@ -431,47 +432,74 @@ the packets enqueued during WP.
 
 The main advantage of S-CoSenS is its ability to adapt dynamically to the
 wireless network throughput at runtime, by calculating for each radio duty
-cycle the length of SP and WP, according to the number of retransmitted
-packets during previous cycles. It follows a ``sliding average''
-algorithm, where WP duration for each duty cycle is computed as:
-\begin{displaymath}
+cycle the length of SP and WP, according to the number of relayed
+packets during previous cycles. Note that the set of the SP and the WP
+of a same cycle is named \emph{subframe}; it is the part of a S-CoSenS
+cycle whose length is computed and known \textit{a priori}; on the contrary,
+TP duration is always unknown up to its very beginning, because it depends
+on the amount of data successfully received during the WP that precedes it.
+
+The computation of WP duration follows a ``sliding average'' algorithm,
+where WP duration for each duty cycle is computed from the average
+of previous cycles as:
+\begin{eqnarray*}
+&&
 \overline{\mathrm{WP}_{n}} = \alpha \cdot \overline{\mathrm{WP}_{n-1}}
                 + (1 - \alpha) \cdot \mathrm{WP}_{n-1}
-\end{displaymath}
+\\ &&
+\mathrm{WP}_{n} = \max ( \mathrm{WP}_{min},
+                  \min ( \overline{\mathrm{WP}_{n}}, \mathrm{WP}_{max} ) )
+\end{eqnarray*}
 where $\overline{\mathrm{WP}_{n}}$ and $\overline{\mathrm{WP}_{n-1}}$
 are respectively the average WP length at $n^{\mathrm{th}}$ and
-$(n-1)^{\mathrm{th}}$ cycle, and $\mathrm{WP}_{n-1}$ is the actual
-length of the $(n-1)^{\mathrm{th}}$ cycle.
+$(n-1)^{\mathrm{th}}$ cycle, while $\mathrm{WP}_{n}$ and $\mathrm{WP}_{n-1}$
+are the actual length of respectively the $n^{\mathrm{th}}$ and
+$(n-1)^{\mathrm{th}}$ cycles; $\alpha$ is a parameter between 0 and 1
+representing the relative weight of the history in the computation,
+and $\mathrm{WP}_{min}$ and $\mathrm{WP}_{max}$ are high and low limits
+imposed by the programmer to the WP duration.
 
-The local synchronization between a S-CoSenS router and the other nodes
-of its PAN is done thanks to a beacon packet, that is broadcasted by
-the router at the beginning of each duty cycle. This beacon contains the
-duration (in microseconds) of the SP and WP for the currently beginning
-duty cycle.
+The length of the whole subframe being a parameter given at compilation time,
+SP duration is simply computed by subtracting the calculated duration of WP
+from the subframe duration for every cycle.
 
-The whole S-CoSenS duty cycle workflow for a PAN router is summarized
-in figure \ref{FigSCosensDutyCycle} hereafter.
+The local synchronization between a S-CoSenS router and its leaf nodes
+is done thanks to a beacon packet, that is broadcasted by the router at
+the beginning of each cycle. This beacon contains the duration
+(in microseconds) of the SP and WP for the currently
+beginning cycle.
+
+The whole S-CoSenS cycle workflow for a router is summarized in figure
+\ref{FigSCosensDutyCycle} hereafter.
 
 \begin{figure}[!h]
 \centering
 \begin{tikzpicture}[>=latex]
-\draw[->] (-1cm,  0.25cm) -- +(7.5cm, 0);
-\draw[->] (-1cm, -0.25cm) -- +(7.5cm, 0);
 %beacon
 \fill[black] (0cm, -0.25cm) rectangle +(0.2cm, 0.5cm);
 \draw[->,thick] (0.1cm, 0.25cm) -- +(0, 0.5cm);
-\draw (0.1cm, 1cm) node {Beacon};
+\draw (0.1cm, 1.3cm) node {Beacon};
+\draw[anchor=west] (-0.6cm, 0.9cm) node {(broadcasted)};
 %SP
 \draw[thick] (0cm, -0.25cm) -- +(0, 0.5cm);
-\fill[lightgray] (0.2cm, -0.25cm) rectangle +(1.8cm, 0.5cm);
-\draw (1.1cm, 0) node {SP};
+%regular wake-ups during SP
+\foreach \x in {1,2,3,4,5,6}
+{
+  \fill[lightgray] (0.2cm + \x * 0.25cm, -0.25cm) rectangle +(0.05cm, 0.5cm);
+}
+\draw (1.1cm, 0) node {\textbf{SP}};
 %WP
 \draw[thick] (2cm, -0.25cm) -- +(0, 0.5cm);
-\draw (3cm, 0) node {WP};
+\fill[lightgray] (2cm, -0.25cm) rectangle +(2cm, 0.5cm);
+\draw (3cm, 0) node {\textbf{WP}};
 %TP
 \draw[thick] (4cm, -0.25cm) -- +(0, 0.5cm);
-\draw (5cm, 0) node {TP};
+\fill[lightgray] (4cm, -0.25cm) rectangle +(2cm, 0.5cm);
+\draw (5cm, 0) node {\textbf{TP}};
 \draw[thick] (6cm, -0.25cm) -- +(0, 0.5cm);
+%time axes
+\draw[->] (-0.5cm,  0.25cm) -- +(7cm, 0);
+\draw[->] (-0.5cm, -0.25cm) -- +(7cm, 0);
 %RX packets
 \draw[->,thick] (2.5cm, 0.75cm) -- +(0, -0.5cm);
 \draw (2.5cm, 1cm) node {P1};
@@ -486,22 +514,95 @@ in figure \ref{FigSCosensDutyCycle} hereafter.
 \draw (5cm, 1cm) node {P2};
 \draw[->,thick] (5.5cm, 0.25cm) -- +(0, 0.5cm);
 \draw (5.5cm, 1cm) node {P3};
-%brace
-\draw (0cm,-0.5cm)    .. controls +(0,-0.25cm) .. +(1.5cm,-0.25cm);
-\draw (1.5cm,-0.75cm) .. controls +(1.5cm,0)   .. +(1.5cm,-0.25cm);
-\draw (3cm,-1cm)      .. controls +(0,0.25cm)  .. +(1.5cm,0.25cm);
-\draw (4.5cm,-0.75cm) .. controls +(1.5cm,0)   .. +(1.5cm,0.25cm);
+%first brace: subframe
+\draw (0cm, -0.5cm)  .. controls +(0, -0.25cm) .. +(1cm, -0.25cm);
+\draw (1cm, -0.75cm) .. controls +(1cm, 0)     .. +(1cm, -0.25cm);
+\draw (2cm, -1cm)    .. controls +(0, 0.25cm)  .. +(1cm, 0.25cm);
+\draw (3cm, -0.75cm) .. controls +(1cm, 0)     .. +(1cm, 0.25cm);
+\draw (2cm, -1.25cm) node {\textbf{Subframe}};
+%second brace: whole cycle
+\draw (0cm, -1.5cm)    .. controls +(0, -0.25cm) .. +(1.5cm, -0.25cm);
+\draw (1.5cm, -1.75cm) .. controls +(1.5cm, 0)   .. +(1.5cm, -0.25cm);
+\draw (3cm, -2cm)      .. controls +(0, 0.25cm)  .. +(1.5cm, 0.25cm);
+\draw (4.5cm, -1.75cm) .. controls +(1.5cm, 0)   .. +(1.5cm, 0.25cm);
 \end{tikzpicture}
-\caption{A typical S-CoSenS router duty cycle.}
+\caption{A typical S-CoSenS router cycle.\\
+         The gray strips in the SP represents the short wake-up-and-listen
+         periods used for inter-router communication.}
 \label{FigSCosensDutyCycle}
 \end{figure}
 
+An interesting property of S-CoSenS is that leaf (i.e.: non-router) nodes
+always have their radio transceiver offline, except when they have packets
+to send. When a data packet is generated on a leaf node, the latter wakes up
+its radio transceiver, listens and waits to the first beacon emitted by
+an S-CoSenS router, then sends its packet using CSMA/CA at the beginning
+of the WP described in the beacon it received. A leaf node will put its
+transceiver offline during the delay between the beacon and that WP
+(that is: the SP of the router that emitted the received beacon), and
+will go back to sleep mode once its packet is transmitted.
+All of this procedure is shown in figure \ref{FigSCoSenSPktTx}.
+
+\begin{figure}[!h]
+\centering
+\begin{tikzpicture}[>=latex]
+%%router
+\draw (-0.5cm, 0) node {\large \textit{R}};
+%sp
+\draw[thick] (1cm, -0.25cm) -- +(0, 0.5cm);
+\draw (2cm, 0) node {\textbf{SP}};
+%wp
+\draw[thick] (3cm, -0.25cm) -- +(0, 0.5cm);
+\fill[lightgray] (3cm, -0.25cm) rectangle +(2cm, 0.5cm);
+\draw (4cm, 0) node {\textbf{WP}};
+%tp
+\draw[thick] (5cm, -0.25cm) -- +(0, 0.5cm);
+\fill[lightgray] (5cm, -0.25cm) rectangle +(0.5cm, 0.5cm);
+\draw (5.25cm, -0.5cm) node {\textbf{TP}};
+\draw[thick] (5.5cm, -0.25cm) -- +(0, 0.5cm);
+%time axes
+\draw[->] (-0.5cm,  0.25cm) -- +(6.5cm, 0);
+\draw[->] (-0.5cm, -0.25cm) -- +(6.5cm, 0);
+%%leaf node
+\draw (-0.5cm, -1.5cm) node {\large \textit{LN}};
+%radio activity
+\fill[gray] (0cm, -1.25cm) rectangle +(1.3cm, -0.5cm);
+\fill[gray] (2.9cm, -1.25cm) rectangle +(0.5cm, -0.5cm);
+%beacon
+\fill[black] (1cm, -0.25cm) rectangle +(0.2cm, 0.5cm);
+\draw[->,thick] (1.1cm, 0.25cm) -- +(0, -1.5cm);
+\draw[anchor=east] (1cm, -0.75cm) node {Beacon};
+\fill[black] (1cm, -1.25cm) rectangle +(0.2cm, -0.5cm);
+%packet generation
+\draw[->,very thick] (0cm, -2.5cm) -- +(0, 0.75cm);
+\draw[anchor=west] (0cm, -2.5cm)
+     node {\footnotesize \textbf{packet arrival}};
+%TX leaf->router
+\fill[black] (3.1cm, -1.25cm) rectangle +(0.2cm, -0.5cm);
+\draw[->,thick] (3.2cm, -1.25cm) -- +(0, 1cm);
+\draw[anchor=west] (3.2cm, -0.75cm) node {P1};
+\fill[black] (3.1cm, -0.25cm) rectangle +(0.2cm, 0.5cm);
+%TX router->...
+\fill[black] (5.1cm, -0.25cm) rectangle +(0.2cm, 0.5cm);
+\draw[->,thick] (5.2cm, 0.25cm) -- +(0, 0.5cm);
+\draw (5.2cm, 1cm) node {P1};
+%time axes
+\draw[->] (-0.5cm, -1.25cm) -- +(6.5cm, 0);
+\draw[->] (-0.5cm, -1.75cm) -- +(6.5cm, 0);
+\end{tikzpicture}
+\caption{A typical transmission of a data packet with the S-CoSenS protocol
+         between a leaf node and a router.}
+\label{FigSCoSenSPktTx}
+\end{figure}
+
 We thus need to synchronize with enough accuracy different devices (that
-can be based on different hardware platforms) on duty cycles whose periods
+can be based on different hardware platforms) on cycles whose periods
 are dynamically calculated at runtime, with resolution that needs to be
 in the sub-millisecond range. This is where RIOT OS advanced real-time
 features really shine, while the other comparable OSes are
 for that purpose definitely lacking.
+
+\subsection{Simulations and Synchronization Accuracy}
 
 We have implemented S-CoSenS under RIOT, and made first tests by performing
 simulations---with Cooja---of a 802.15.4 PAN (Personal Area Network)
@@ -621,6 +722,70 @@ take advantage of RIOT real-time features to wake up precisely when
 the router goes back into WP mode and is ready to receive their
 packets.
 
+\subsection{Performance Evaluation: Preliminary Results}
+
+We will now present the first, preliminary results we obtained through the
+simulations we described hereabove.
+
+Important: note that \emph{we evaluate here the implementations}, and not the
+intrinsic advantages or weaknesses of the protocols themselves.
+
+We have first focused on QoS results, by computing Packet Reception Rates
+and end-to-end delays between the various leaf nodes and the sink of the test
+PAN presented earlier in figure \ref{FigPANtest}, to evaluate the quality
+of the transmissions allowed by using both of the protocols.
+
+For these first tests, we used default parameters for both RDC protocols
+(ContikiMAC and S-CoSenS), only pushing the CSMA/CA MAC layer of Contiki
+to make up to 8 attempts for transmitting a same packet, so as to put it
+on par with our implementation on RIOT OS. We have otherwise not yet
+tried to tweak the various parameters offered by both the RDC protocols
+to optimize results. This will be the subject of our next experiences.
+
+\subsubsection{Packet Reception Rates (PRR)}
+
+The result obtained for PRR using both protocols are shown in figure
+\ref{FigPRRresults} hereafter.
+
+\begin{figure}
+  \centering
+  \includegraphics[width=7.5cm]{PRRgraph.png}
+  \caption{PRR results for both ContikiMAC and S-CoSenS RDC protocols,
+           using default values for parameters}
+  \label{FigPRRresults}
+\end{figure}
+
+The advantage of S-CoSenS as shown on the figure is clear and significant
+whatever the packet arrival interval constated. Excepted for the ``extreme''
+scenario corresponding to an over-saturation of the radio channel, S-CoSenS
+achieve an excellent PRR ($\geq 90\%$), while ContikiMAX's PRR is always
+$\leq 50\%$.
+
+\subsubsection{End-To-End Transmission Delays}
+
+The result obtained for PRR using both protocols are shown in figure
+\ref{FigDelaysResults}.
+
+\begin{figure}
+  \centering
+  \includegraphics[width=7.5cm]{DelaysGraph.png}
+  \caption{End-to-end delays results for both ContikiMAC and S-CoSenS RDC
+           protocols, using default values for parameters; note that
+           vertical axis is drawn with logarithmic scale.}
+  \label{FigDelaysResults}
+\end{figure}
+
+S-CoSenS has here also clearly the upper hand, so much that we had to use
+logarithmic scale for the vertical axis to keep figure \ref{FigDelaysResults}
+easily readable. The advantage of S-CoSenS is valid whatever the packet
+arrival interval, our protocol being able to keep delay below an acceptable
+limit (in the magnitude of hundreds of milliseconds), while ContikiMAC
+delays rocket up to tens of seconds when network load increases.
+
+While these are only preliminary results, it seems that being able to
+leverage real-time features is clearly a significant advantage when designing
+and implementing MAC/RDC protocols, at least when it comes to QoS results.
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -651,8 +816,8 @@ We plan, in a near future:
 RIOT is a powerful real-time operating system, adapted to the limitations
 of deeply embedded hardware microcontrollers, while offering state-of-the-art
 techniques (preemptive multitasking, tickless scheduler, optimal use
-of hardware timers) that---we believe---makes it on par with
-the best OSes of the embedded and real-time world.
+of hardware timers) that---we believe---makes it one of the most
+suitable OSes for the embedded and real-time world.
 
 While we weren't able to accurately quantize energy consumption
 yet, we can reasonably think that lowering activity of MCU and radio
