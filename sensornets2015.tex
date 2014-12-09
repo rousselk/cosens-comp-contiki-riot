@@ -85,11 +85,12 @@ etc.)
 
 IoT motes are usually very compact devices: they are usually built around
 a central integrated chip that contains the main processing unit and several
-basic peripherals (such as timers, A/D and D/A converters, I/O controllers...)
-called microcontroller units or MCUs. Apart from the MCU, a mote generally
-only contains some ``physical-world'' sensors and a radio transceiver for
-networking. The main radio communication protocol currently used in the IoT
-field is IEEE 802.15.4. Some MCUs do integrate a 802.15.4 transceiver on-chip.
+basic peripherals (such as timers, A/D and D/A converters, I/O
+controllers\ldots) called microcontroller units or MCUs. Apart from the MCU,
+a mote generally only contains some ``physical-world'' sensors and a radio
+transceiver for networking. The main radio communication protocol currently
+used in the IoT field is IEEE 802.15.4. Some MCUs do integrate a 802.15.4
+transceiver on-chip.
 
 Among the various components that constitute a mote, the most power-consuming
 block is the radio transceiver. Consequently, to reduce the power consumption
@@ -140,6 +141,7 @@ Specialized OSes for the resource-constrained devices that constitute
 wireless sensor networks have been designed, published, and made available
 for quite a long time.
 
+\subsection{TinyOS}
 
 The first widely used system in this domain was \emph{TinyOS} \cite{TinyOS}.
 It is an open-source OS, whose first stable release (1.0) was published in
@@ -166,6 +168,7 @@ All of these limitations, plus a relatively slow development pace (last
 stable version dates back to august 2012) have harmed its adoption,
 and it is not the mainly used OS of the domain anymore.
 
+\subsection{Contiki}
 
 The current reference OS in the domain of WSN and IoT is \emph{Contiki}
 \cite{ContikiOS}. It's also an open-source OS, which was first released
@@ -248,12 +251,66 @@ For all these reasons, we were unable to use Contiki OS to develop and
 implement our high-performance MAC/RDC protocols. We definitely needed
 an OS with efficient real-time features and event handling mechanism.
 
+\subsection{Other options}
+
+There are other, less used OSes designed for the WSN/IoT domain, by none
+of them fulfilled our needs, for the following reasons:
+\begin{description}
+
+\item[SOS] \cite{SOS} This system's development is cancelled since november
+           2008, its authors explicitly recommend on their website to
+           ``consider one of the more actively supported alternatives''.
+
+\item[Lorien] \cite{LorienOS} While its component-oriented approach is
+              interesting, this system seems to have enjoyed very little
+              acceptance; moreover, it is currently only available for
+              one hardware platform (TelosB/SkyMote) which seriously
+              limits the portability we can expect from using an OS;
+              moreover, its development seems to have slowed down quite
+              a bit, since the latest available Lorien release was published
+              in july 2011, while the latest commit in the project's
+              SourceForge repository (r46) goes back to january 2013.
+
+\item[Mantis] \cite{MantisOS} While this project claims to be Open Source,
+              the project has made, on its SourceForge web site, no public
+              release, and the access to the source repository 
+              (\texttt{http://mantis.cs.colorado.edu/viewcvs/}) seems
+              to stall. Moreover, reading the project's main web page
+              shows us that the last posted news talk about a first beta
+              to released in 2007, while the last publications about
+              Mantis OS seems to go also back to 2007. All of this
+              makes us think that this project is abandoned\ldots
+
+\item[LiteOS] \cite{LiteOS} This system offers very interesting features,
+              especially the ability to update wirelessly nodes' firmwares,
+              as well as the built-in hierarchical file system; unfortunately,
+              it is currently only available on IRIS/MicaZ platforms,
+              and requires AVR Studio for programming (which imposes
+              Microsoft Windows as a development platform), which
+              greatly hinders portability, since it is clearly strongly
+              tied to the AVR microcontroller architecture.
+
+\item[MansOS] \cite{MansOS} This system is very recent, and offers many
+              interesting features (like optional preemptive multitasking,
+              a network stack, runtime reprogramming, and a scripting
+              language); it is available on two MCU architectures: AVR and
+              MSP430 (but not ARM). However, none of the real-time features
+              we wanted seem to be available (only software timers with
+              a 1~millisecond resolution are available).
+
+\end{description}
+In any case, none of the alternative OSes cited hereabove offer the real-time
+features we were looking for.
+
+\bigskip
 
 On the other hand, ``bare-metal'' programming is also unacceptable for us:
 it would mean sacrificing portability and multitasking; and we would also
 need to redevelop many tools and APIs to make application programming
 even remotely practical enough for third-party developers who would
 want to use our protocols.
+
+\bigskip
 
 We also envisioned to use an established real-time OS (RTOS) as a base
 for our works. The current reference when it comes to open-source RTOS is
@@ -267,7 +324,7 @@ or very limited, or proprietary and commercial software; and most of them
 are tied to a peculiar piece of hardware, thus ruining
 the portability advantage offered by the OS.)
 
-\bigskip
+\subsection{Summary: Wanted Features}
 
 To summarize the issue, what is required is an OS that:
 \begin{itemize}
@@ -418,8 +475,8 @@ the next section.
 
 \subsection{The S-CoSenS Protocol}
 
-The first protocol we wanted to implement is S-CoSenS, which
-is designed to work on top of the IEEE 802.15.4 physical and MAC
+The first protocol we wanted to implement is S-CoSenS \cite{TheseBNefzi},
+which is designed to work on top of the IEEE 802.15.4 physical and MAC
 (i.e.: CSMA/CA) layers.
 
 It is an evolution of the already published CoSenS protocol \cite{CosensConf}:
@@ -816,6 +873,8 @@ easily readable. The advantage of S-CoSenS is valid whatever the packet
 arrival interval, our protocol being able to keep delay below an acceptable
 limit (in the magnitude of hundreds of milliseconds), while ContikiMAC
 delays rocket up to tens of seconds when network load increases.
+
+\subsubsection{Summary: QoS Considerations}
 
 While these are only preliminary results, it seems that being able to
 leverage real-time features is clearly a significant advantage when designing
