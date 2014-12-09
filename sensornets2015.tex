@@ -746,26 +746,43 @@ to optimize results. This will be the subject of our next experiences.
 \subsubsection{Packet Reception Rates (PRR)}
 
 The result obtained for PRR using both protocols are shown in figure
-\ref{FigPRRresults} hereafter.
+\ref{FigPRRresults} as well as table \ref{TblPRRresults}.
 
 \begin{figure}
   \centering
   \includegraphics[width=7.5cm]{PRRgraph.png}
   \caption{PRR results for both ContikiMAC and S-CoSenS RDC protocols,
-           using default values for parameters}
+           using default values for parameters.}
   \label{FigPRRresults}
 \end{figure}
+
+\begin{table}
+\centering
+\begin{tabular}{|r|r|r|}
+\hline
+ PAI \textbackslash\ Protocol & ContikiMAC & S-CoSenS \\
+\hline
+ 1500 ms & 49.70\% & 98.10\% \\
+ 1000 ms & 32.82\% & 96.90\% \\
+  500 ms & 14.44\% & 89.44\% \\
+  100 ms &  0.64\% & 25.80\% \\
+\hline
+\end{tabular}
+\caption{PRR results for both ContikiMAC and S-CoSenS RDC protocols,
+         using default values for parameters.}
+\label{TblPRRresults}
+\end{table}
 
 The advantage of S-CoSenS as shown on the figure is clear and significant
 whatever the packet arrival interval constated. Excepted for the ``extreme''
 scenario corresponding to an over-saturation of the radio channel, S-CoSenS
-achieve an excellent PRR ($\geq 90\%$), while ContikiMAX's PRR is always
-$\leq 50\%$.
+achieve an excellent PRR ($\gtrapprox 90\%$), while ContikiMAC's PRR
+is always $\lessapprox 50\%$.
 
 \subsubsection{End-To-End Transmission Delays}
 
 The result obtained for PRR using both protocols are shown in figure
-\ref{FigDelaysResults}.
+\ref{FigDelaysResults} and table \ref{TblDelaysResults}.
 
 \begin{figure}
   \centering
@@ -775,6 +792,23 @@ The result obtained for PRR using both protocols are shown in figure
            vertical axis is drawn with logarithmic scale.}
   \label{FigDelaysResults}
 \end{figure}
+
+\begin{table}
+\centering
+\begin{tabular}{|r|r|r|}
+\hline
+ PAI \textbackslash\ Protocol & ContikiMAC & S-CoSenS \\
+\hline
+ 1500 ms &  3579 ms & 108 ms \\
+ 1000 ms &  4093 ms & 108 ms \\
+  500 ms &  6452 ms & 126 ms \\
+  100 ms & 12913 ms & 168 ms \\
+\hline
+\end{tabular}
+\caption{End-to-end delays results for both ContikiMAC and S-CoSenS RDC
+         protocols, using default values for parameters.}
+\label{TblDelaysResults}
+\end{table}
 
 S-CoSenS has here also clearly the upper hand, so much that we had to use
 logarithmic scale for the vertical axis to keep figure \ref{FigDelaysResults}
