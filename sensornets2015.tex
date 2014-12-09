@@ -253,50 +253,49 @@ an OS with efficient real-time features and event handling mechanism.
 
 \subsection{Other options}
 
-There are other, less used OSes designed for the WSN/IoT domain, by none
-of them fulfilled our needs, for the following reasons:
+There are other, less used OSes designed for the WSN/IoT domain, but none
+of them fulfilled our requirements, for the following reasons:
 \begin{description}
 
-\item[SOS] \cite{SOS} This system's development is cancelled since november
-           2008, its authors explicitly recommend on their website to
+\item[SOS] \cite{SOS} This system's development has been cancelled since november
+           2008; its authors explicitly recommend on their website to
            ``consider one of the more actively supported alternatives''.
 
 \item[Lorien] \cite{LorienOS} While its component-oriented approach is
-              interesting, this system seems to have enjoyed very little
-              acceptance; moreover, it is currently only available for
+              interesting, this system seems does not seem very widespread. It is currently available for only 
               one hardware platform (TelosB/SkyMote) which seriously
-              limits the portability we can expect from using an OS;
-              moreover, its development seems to have slowed down quite
+              limits the portability we can expect from using an OS. 
+              Moreover, its development seems to have slowed down quite
               a bit, since the latest available Lorien release was published
               in july 2011, while the latest commit in the project's
-              SourceForge repository (r46) goes back to january 2013.
+              SourceForge repository (r46) dates back to january 2013.
 
 \item[Mantis] \cite{MantisOS} While this project claims to be Open Source,
               the project has made, on its SourceForge web site, no public
               release, and the access to the source repository 
               (\texttt{http://mantis.cs.colorado.edu/viewcvs/}) seems
               to stall. Moreover, reading the project's main web page
-              shows us that the last posted news talk about a first beta
-              to released in 2007, while the last publications about
-              Mantis OS seems to go also back to 2007. All of this
-              makes us think that this project is abandoned\ldots
+              shows us that the last posted news item mentions a first beta
+              to be released in 2007. The last publications about
+              Mantis OS also seems to be in 2007. All of these elements 
+              tend to indicate that this project is abandoned\ldots
 
 \item[LiteOS] \cite{LiteOS} This system offers very interesting features,
-              especially the ability to update wirelessly nodes' firmwares,
-              as well as the built-in hierarchical file system; unfortunately,
+              especially the ability to update the nodes firmwares over the wireless,
+              as well as the built-in hierarchical file system. Unfortunately,
               it is currently only available on IRIS/MicaZ platforms,
               and requires AVR Studio for programming (which imposes
-              Microsoft Windows as a development platform), which
-              greatly hinders portability, since it is clearly strongly
+              Microsoft Windows as a development platform). This
+              greatly hinders portability, since LiteOS is clearly strongly
               tied to the AVR microcontroller architecture.
 
-\item[MansOS] \cite{MansOS} This system is very recent, and offers many
-              interesting features (like optional preemptive multitasking,
+\item[MansOS] \cite{MansOS} This system is very recent and offers many
+              interesting features, like optional preemptive multitasking,
               a network stack, runtime reprogramming, and a scripting
-              language); it is available on two MCU architectures: AVR and
+              language. It is available on two MCU architectures: AVR and
               MSP430 (but not ARM). However, none of the real-time features
-              we wanted seem to be available (only software timers with
-              a 1~millisecond resolution are available).
+              we wanted seems to be available: e.g. only software timers with
+              a 1~millisecond resolution are available.
 
 \end{description}
 In any case, none of the alternative OSes cited hereabove offer the real-time
