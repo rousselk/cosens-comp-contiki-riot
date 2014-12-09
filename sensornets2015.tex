@@ -2,7 +2,6 @@
 
 
 \usepackage{apalike}
-\usepackage{SCITEPRESS}
 \usepackage{amssymb}
 \usepackage{amstext}
 \usepackage{amsmath}
@@ -11,7 +10,10 @@
 \usepackage{multicol}
 \usepackage[small]{caption}
 
+
 \usepackage{tikz}
+
+\usepackage{SCITEPRESS}
 
 
 
@@ -326,7 +328,7 @@ the portability advantage offered by the OS.)
 
 \subsection{Summary: Wanted Features}
 
-To summarize the issue, what is required is an OS that:
+To summarize the issue, what we required is an OS that:
 \begin{itemize}
 \item is adapted to the limitations of the deeply-embedded MCUs that
       constitute the core of WSN/IoT motes;
@@ -398,8 +400,9 @@ based on ARM microcontrollers).
 However, we also note that, thanks to its modular architecture, the RIOT
 kernel, compiled with only PHY and MAC~/ RDC layers, is actually lightweight
 and consumes little memory. We consequently believe that the current
-situation is due to the immaturity of higher layers of RIOT network stack,
-and that in the future MSP430-based devices could be used as FFD with RIOT OS.
+situation will improve with the maturation of higher layers of RIOT network
+stack, and that in the future more constrained devices could also be used
+as FFD with RIOT OS.
 
 \medskip
 
@@ -425,8 +428,8 @@ with many devices---much easier to design and test.
 RIOT OS has historically been developed first on legacy ARM devices
 (ARM7TDMI-based MCUs), then ported on more recent microcontrollers
 (ARM Cortex-M) and other architectures (MSP430 then AVR). However,
-the MSP430 port was, before we improved it, yet immature and
-prone to crash.
+the MSP430 port was, before we improved it, still not as ``polished''
+as ARM code and thus prone to crash.
 
 Our contribution can be summarized in the following points:
 
