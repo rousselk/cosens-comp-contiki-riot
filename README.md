@@ -1,4 +1,5 @@
-Entrepôt Git de travail
-=======================
+SENSORNETS 2015
+===============
 
-Zone de travail pour publication(s) a venir
+Source LaTeX de l'article publié dans SENSORNETS en février 2015.
+
